@@ -1,8 +1,8 @@
 Bril-cpp
 =======
-#How to Build
+# How to Build
 
-To build bril-cpp project, follow these steps:
+To build `bril-cpp` project, follow these steps:
 1. Make sure you have CMake (version 3.10 or higher) installed on your system.
 2. Clone the repository and navigate to the project directory.
 3. Create a build directory and navigate into it:
@@ -24,4 +24,4 @@ cmake ..
 make
 ```
 
-6. After successful compilation, you can find the executable files build_blocks and build_cfg in the build directory.
+6. After successful compilation, you can find the executable files `build_blocks` and `build_cfg` in the build directory.
