@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/build_blocks.dir/src/buildBlocksMain.cpp.o -o build_blocks  libbril_common.a 
