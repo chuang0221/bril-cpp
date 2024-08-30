@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/build_cfg.dir/src/buildCFGMain.cpp.o -o build_cfg  libbril_common.a 

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libbril_common.a CMakeFiles/bril_common.dir/src/buildBlocks.cpp.o CMakeFiles/bril_common.dir/src/instr2str.cpp.o CMakeFiles/bril_common.dir/src/buildCFG.cpp.o CMakeFiles/bril_common.dir/src/common.cpp.o CMakeFiles/bril_common.dir/src/logger.cpp.o
-/usr/bin/ranlib libbril_common.a
