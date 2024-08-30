@@ -2,9 +2,9 @@ Bril-cpp
 =======
 # Introduction
 
-Bril-cpp contains several tools for Bril IR, including:
+Bril-cpp is a collection of tools for Bril IR, including:
 
-- `build_blocks`: Builds a CFG from a Bril program.
+- `build_blocks`: Builds blocks from a Bril program.
 - `build_cfg`: Builds a CFG from a Bril program.
 
 This project using [nlohmann/json](https://github.com/nlohmann/json) for parsing JSON.
@@ -34,3 +34,10 @@ make
 ```
 
 6. After successful compilation, you can find the executable files `build_blocks` and `build_cfg` in the build directory.
+
+# Usage
+
+You can run the following commands combined the `bril2json` with `build_cfg` or `build_blocks` using pipe:
+```bash
+bril2json < ./test/add.bril | ./build/build_cfg
+```
