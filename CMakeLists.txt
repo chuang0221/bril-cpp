@@ -13,6 +13,7 @@ set(SOURCES
     src/buildCFG.cpp
     src/common.cpp
     src/logger.cpp
+    src/localValueNumbering.cpp
 )
 
 add_library(bril_common ${SOURCES})
@@ -24,3 +25,6 @@ target_link_libraries(build_blocks PRIVATE bril_common nlohmann_json::nlohmann_j
 
 add_executable(build_cfg src/buildCFGMain.cpp)
 target_link_libraries(build_cfg PRIVATE bril_common nlohmann_json::nlohmann_json)
+
+add_executable(local_value_numbering src/localValueNumberingMain.cpp)
+target_link_libraries(local_value_numbering PRIVATE bril_common nlohmann_json::nlohmann_json)

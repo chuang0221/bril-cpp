@@ -16,7 +16,11 @@ std::string instr2str(const json& instr) {
         std::string tyann = instr.contains("type") ? ": " + type2str(instr["type"]) : "";
         oss << instr["dest"].get<std::string>() << tyann << " = const " 
             << value2str(instr["type"], instr["value"]);
-    } else {
+    }
+    else if (instr["op"] == "id") {
+        oss << instr["dest"].get<std::string>() << ": " << type2str(instr["type"]) << " = id " << instr["args"][0].get<std::string>();
+    }
+    else {
         std::string rhs = instr["op"].get<std::string>();
         if (instr.contains("funcs")) {
             for (const auto& f : instr["funcs"]) {
