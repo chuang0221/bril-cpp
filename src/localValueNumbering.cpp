@@ -50,8 +50,9 @@ long long ValueNumbering::evaluate(const std::string& type1, const std::string& 
 void ValueNumbering::update(json& instr, const Config& config) {
     std::string op = instr["op"];
     std::string dest = instr["dest"];
-    if (config.enableConstantFolding && op == "const") {
-        name2const[dest] = {instr["type"], std::to_string(instr["value"].get<long long>())};
+    if (op == "const") {
+        refreshNumber(dest);
+        if (config.enableConstantFolding) name2const[dest] = {instr["type"], std::to_string(instr["value"].get<long long>())};
         return;
     }
     std::vector<std::string> args;
@@ -79,6 +80,10 @@ void ValueNumbering::update(json& instr, const Config& config) {
         }
     }
     if (hashTable.find(nameTuple) != hashTable.end()) {
+        int numberValue = hashTable[nameTuple];
+        if (name2number[number2name[numberValue]] != numberValue) {
+            return;
+        }
         instr["op"] = "id";
         instr["args"] = json::array({number2name[hashTable[nameTuple]]});
         name2number[dest] = hashTable[nameTuple];

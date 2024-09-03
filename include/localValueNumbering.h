@@ -39,6 +39,7 @@ public:
     long long stov(const std::string& value);
     long long evaluate(const std::string& type1, const std::string& value1, const std::string& type2, const std::string& value2, const std::string& op);
     void update(json& instr, const Config& config);
+    //TODO: Implement the algebraic identity elimination
 };
 
 void checkCommutative(std::tuple<int, std::string, int>& nameTuple);
