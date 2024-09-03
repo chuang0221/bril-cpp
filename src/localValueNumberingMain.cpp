@@ -15,6 +15,9 @@ int main(int argc, char* argv[]) {
             std::vector<std::string> args(argv + 1, argv + argc);
             Config config(false, false, false);
             for (auto& arg : args) {
+                if (arg == "-g") {
+                    Logger::getInstance().setLogLevel(LogLevel::DEBUG);
+                }
                 if (arg == "-c") {
                     config.enableCommutative = true;
                 }

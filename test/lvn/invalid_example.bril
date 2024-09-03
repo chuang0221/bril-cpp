@@ -5,4 +5,5 @@
     b: int = add x y;
     a: int = const 17;
     c: int = add x y;
+    d: int = add x y;
 }

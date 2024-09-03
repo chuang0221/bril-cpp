@@ -1,4 +1,5 @@
 #include "localValueNumbering.h"
+#include "logger.h"
 
 ValueNumbering::ValueNumbering() : _number(0) {}
 
@@ -51,7 +52,8 @@ void ValueNumbering::update(json& instr, const Config& config) {
     std::string op = instr["op"];
     std::string dest = instr["dest"];
     if (op == "const") {
-        refreshNumber(dest);
+        int numberValue = refreshNumber(dest);
+        LOG_DEBUG(dest + " <-- " + std::to_string(numberValue));
         if (config.enableConstantFolding) name2const[dest] = {instr["type"], std::to_string(instr["value"].get<long long>())};
         return;
     }
@@ -81,7 +83,10 @@ void ValueNumbering::update(json& instr, const Config& config) {
     }
     if (hashTable.find(nameTuple) != hashTable.end()) {
         int numberValue = hashTable[nameTuple];
+        LOG_DEBUG(dest + "(" + std::to_string(numberValue) + ")" + " <-- " + arg1 + "(" + std::to_string(arg1Number) + ")" + " " + op + " " + arg2 + "(" + std::to_string(arg2Number) + ")");
         if (name2number[number2name[numberValue]] != numberValue) {
+            int destNumber = refreshNumber(dest);
+            hashTable[nameTuple] = destNumber;
             return;
         }
         instr["op"] = "id";
