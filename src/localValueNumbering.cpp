@@ -35,15 +35,26 @@ void ValueNumbering::update(json& instr) {
     if (args.size() != 2) return; // Only consider binary operations
     std::string arg1 = args[0], arg2 = args[1];
     int arg1Number = addNumber(arg1), arg2Number = addNumber(arg2);
-    if (hashTable.find({arg1Number, op, arg2Number}) != hashTable.end()) {
+    std::tuple<int, std::string, int> nameTuple = {arg1Number, op, arg2Number};
+    checkCommutative(nameTuple);
+    if (hashTable.find(nameTuple) != hashTable.end()) {
         instr["op"] = "id";
-        instr["args"] = json::array({number2name[hashTable[{arg1Number, op, arg2Number}]]});
-        name2number[dest] = hashTable[{arg1Number, op, arg2Number}];
+        instr["args"] = json::array({number2name[hashTable[nameTuple]]});
+        name2number[dest] = hashTable[nameTuple];
     }
     else {
         int destNumber = refreshNumber(dest);
-        hashTable[{arg1Number, op, arg2Number}] = destNumber;
+        hashTable[nameTuple] = destNumber;
     }
+}
+
+void checkCommutative(std::tuple<int, std::string, int>& nameTuple) {
+    std::unordered_set<std::string> commutativeOps = {
+        "add", "mul", "and", "or"
+    };
+    auto [arg1Number, op, arg2Number] = nameTuple;
+    nameTuple = {std::min(arg1Number, arg2Number), op, std::max(arg1Number, arg2Number)};
+    return;
 }
 
 void localValueNumbering(std::vector<std::vector<json>>& blocks) {
@@ -51,6 +62,7 @@ void localValueNumbering(std::vector<std::vector<json>>& blocks) {
         ValueNumbering vn;
         for (auto& instr : block) {
             if (instr.find("dest") != instr.end()) {
+                // Only consider value operations
                 vn.update(instr);
             }
         }

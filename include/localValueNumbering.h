@@ -2,6 +2,7 @@
 #define LOCAL_VALUE_NUMBERING_H
 
 #include <nlohmann/json.hpp>
+#include <unordered_set>
 #include <unordered_map>
 #include <vector>
 #include <tuple>
@@ -35,6 +36,8 @@ public:
     int refreshNumber(const std::string& name);
     void update(json& instr);
 };
+
+void checkCommutative(std::tuple<int, std::string, int>& nameTuple);
 
 void localValueNumbering(std::vector<std::vector<json>>& blocks);
 #endif
