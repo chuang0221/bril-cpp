@@ -12,7 +12,8 @@ int main(void) {
             std::vector<std::vector<json>> blocks = buildBlocks(func["instrs"]);
             LOG_INFO("Before local value numbering");
             printBlocks(blocks, true);
-            localValueNumbering(blocks);
+            Config config(true, true, true);
+            localValueNumbering(blocks, config);
             LOG_INFO("After local value numbering");
             printBlocks(blocks, true);
         }

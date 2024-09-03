@@ -13,9 +13,14 @@ std::string value2str(const json& type, const json& value) {
 std::string instr2str(const json& instr) {
     std::ostringstream oss;
     if (instr["op"] == "const") {
-        std::string tyann = instr.contains("type") ? ": " + type2str(instr["type"]) : "";
-        oss << instr["dest"].get<std::string>() << tyann << " = const " 
-            << value2str(instr["type"], instr["value"]);
+        if (instr["type"] == "bool") {
+            oss << instr["dest"].get<std::string>() << ": " << type2str(instr["type"]) << " = const " 
+                << (instr["value"].get<long long>() != 0 ? "true" : "false");
+        }
+        else {
+            oss << instr["dest"].get<std::string>() << ": " << type2str(instr["type"]) << " = const " 
+                << value2str(instr["type"], instr["value"]);
+        }
     }
     else if (instr["op"] == "id") {
         oss << instr["dest"].get<std::string>() << ": " << type2str(instr["type"]) << " = id " << instr["args"][0].get<std::string>();

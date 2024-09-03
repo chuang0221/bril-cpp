@@ -6,6 +6,7 @@ Bril-cpp is a collection of tools for Bril IR, including:
 
 - `build_blocks`: Builds blocks from a Bril program.
 - `build_cfg`: Builds a CFG from a Bril program.
+- `local_value_numbering`: Performs local value numbering on a Bril program.
 
 This project using [nlohmann/json](https://github.com/nlohmann/json) for parsing JSON.
 
