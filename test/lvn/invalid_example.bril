@@ -2,8 +2,8 @@
     x: int = const 1;
     y: int = const 2;
     a: int = add x y;
-    b: int = add x y;
+    b: int = add y x;
     a: int = const 17;
-    c: int = add x y;
-    d: int = add x y;
+    c: int = add y x;
+    d: int = add y x;
 }

@@ -12,5 +12,7 @@ bool isTerminator(json instr);
 std::vector<std::vector<json>> buildBlocks(json instrs);
 void printBlock(std::vector<json> block, bool withLabel);
 void printBlocks(std::vector<std::vector<json>> blocks, bool withLabel);
+json flattenBlock(std::vector<json> block);
+json flattenBlocks(std::vector<std::vector<json>> blocks);
 
 #endif

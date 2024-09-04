@@ -40,6 +40,16 @@ std::vector<std::vector<json>> buildBlocks(json instrs) {
     return blocks;
 }
 
+json flattenBlocks(std::vector<std::vector<json>> blocks) {
+    json flat;
+    for (auto block: blocks) {
+        for (auto instr: block) {
+            flat.push_back(instr);
+        }
+    }
+    return flat;
+}
+
 void printBlock(std::vector<json> block, bool withLabel) {
     for (int i = 0; i < block.size(); i++) {
         if (withLabel) {

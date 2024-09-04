@@ -6,12 +6,12 @@
 int main(int argc, char* argv[]) {
     try {
         Logger::getInstance().setLogLevel(LogLevel::INFO);
-        const json program = parseJsonFromStdin();
-        LOG_INFO("Starting local value numbering");
+        json program = parseJsonFromStdin();
+        LOG_DEBUG("Starting local value numbering");
         for (auto& func : program["functions"]) {
             std::vector<std::vector<json>> blocks = buildBlocks(func["instrs"]);
-            LOG_INFO("Before local value numbering");
-            printBlocks(blocks, true);
+            LOG_DEBUG("Before local value numbering");
+            //printBlocks(blocks, true);
             std::vector<std::string> args(argv + 1, argv + argc);
             Config config(false, false, false);
             for (auto& arg : args) {
@@ -29,10 +29,12 @@ int main(int argc, char* argv[]) {
                 }
             }
             localValueNumbering(blocks, config);
-            LOG_INFO("After local value numbering");
-            printBlocks(blocks, true);
+            LOG_DEBUG("After local value numbering");
+            //printBlocks(blocks, false);
+            func["instrs"] = flattenBlocks(blocks);
         }
-        LOG_INFO("Local value numbering finished");
+        std::cout << program.dump(2) << std::endl;
+        LOG_DEBUG("Local value numbering finished");
     } catch (const std::exception& e) {
         LOG_ERROR(std::string("Error: ") + e.what());
         return 1;
