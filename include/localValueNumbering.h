@@ -24,6 +24,16 @@ namespace std {
     };
 }
 
+enum IdentityType {
+    IDENTITY_NONE,
+    IDENTITY_AND, // a && a = a
+    IDENTITY_OR, // a || a = a
+    IDENTITY_MINUS, // a - a = 0
+    IDENTITY_EQUAL, // a == a = 1
+    IDENTITY_LE, // a <= a = 1
+    IDENTITY_GE, // a >= a = 1
+};
+
 class ValueNumbering {
 private:
     int _number;
@@ -39,10 +49,10 @@ public:
     long long stov(const std::string& value);
     long long evaluate(const std::string& type1, const std::string& value1, const std::string& type2, const std::string& value2, const std::string& op);
     void update(json& instr, const Config& config);
-    //TODO: Implement the algebraic identity elimination
 };
 
 void checkCommutative(std::tuple<int, std::string, int>& nameTuple);
+IdentityType checkAlgebraicIdentity(std::tuple<int, std::string, int>& nameTuple);
 
 void localValueNumbering(std::vector<std::vector<json>>& blocks, const Config& config);
 #endif

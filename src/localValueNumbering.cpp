@@ -48,6 +48,19 @@ long long ValueNumbering::evaluate(const std::string& type1, const std::string& 
     return result;
 }
 
+IdentityType checkAlgebraicIdentity(std::tuple<int, std::string, int>& nameTuple) {
+    auto [arg1Number, op, arg2Number] = nameTuple;
+    if (arg1Number == arg2Number) {
+        if (op == "and") return IDENTITY_AND;
+        if (op == "or") return IDENTITY_OR;
+        if (op == "minus") return IDENTITY_MINUS;
+        if (op == "eq") return IDENTITY_EQUAL;
+        if (op == "le") return IDENTITY_LE;
+        if (op == "ge") return IDENTITY_GE;
+    }
+    return IDENTITY_NONE;
+}
+
 void ValueNumbering::update(json& instr, const Config& config) {
     std::string op = instr["op"];
     std::string dest = instr["dest"];
@@ -77,6 +90,31 @@ void ValueNumbering::update(json& instr, const Config& config) {
                 {"type", instr["type"]},
                 {"value", result}
             });
+            name2const[dest] = {instr["type"], std::to_string(instr["value"].get<long long>())};
+            return;
+        }
+    }
+    if (config.enableAlgebraicIdentity) {
+        IdentityType identityType = checkAlgebraicIdentity(nameTuple);
+        if (identityType == IDENTITY_AND || identityType == IDENTITY_OR) {
+            instr["op"] = "id";
+            instr["args"] = json::array({number2name[std::get<0>(nameTuple)]});
+            name2number[dest] = std::get<0>(nameTuple);
+            return;
+        }
+        if (identityType == IDENTITY_MINUS) {
+            instr["op"] = "const";
+            instr["dest"] = dest;
+            instr["type"] = instr["type"];
+            instr["value"] = 0;
+            name2const[dest] = {instr["type"], std::to_string(instr["value"].get<long long>())};
+            return;
+        }
+        if (identityType == IDENTITY_EQUAL || identityType == IDENTITY_LE || identityType == IDENTITY_GE) {
+            instr["op"] = "const";
+            instr["dest"] = dest;
+            instr["type"] = instr["type"];
+            instr["value"] = 1;
             name2const[dest] = {instr["type"], std::to_string(instr["value"].get<long long>())};
             return;
         }
