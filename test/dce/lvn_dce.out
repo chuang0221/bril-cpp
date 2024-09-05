@@ -1,0 +1,9 @@
+@main {
+  num1: int = const 1;
+  num2: int = const 2;
+  should_be_removed2: int = add num1 num2;
+  should_not_be_removed1: int = id should_be_removed2;
+  num4: int = add num3 num3;
+  print num4;
+  print should_not_be_removed1;
+}

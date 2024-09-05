@@ -1,0 +1,10 @@
+@main{
+  a: int = const 1;
+  b: int = const 1;
+  two: int = const 2;
+  t1: int = mul a two;
+  t2: int = mul a two;
+  t3: int = mul t2 b;
+  result: int = add t1 t3;
+  print result;
+}

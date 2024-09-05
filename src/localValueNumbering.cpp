@@ -61,7 +61,7 @@ IdentityType checkAlgebraicIdentity(std::tuple<int, std::string, int>& nameTuple
     return IDENTITY_NONE;
 }
 
-void ValueNumbering::update(json& instr, const Config& config) {
+void ValueNumbering::update(json& instr, const LVNConfig& config) {
     std::string op = instr["op"];
     std::string dest = instr["dest"];
     if (op == "const") {
@@ -146,7 +146,7 @@ void checkCommutative(std::tuple<int, std::string, int>& nameTuple) {
     return;
 }
 
-void localValueNumbering(std::vector<std::vector<json>>& blocks, const Config& config) {
+void localValueNumbering(std::vector<std::vector<json>>& blocks, const LVNConfig& config) {
     for (auto& block : blocks) {
         ValueNumbering vn;
         for (auto& instr : block) {

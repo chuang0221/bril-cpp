@@ -1,4 +1,4 @@
-#include "localValueNumbering.h"
+#include "deadCodeElimination.h"
 #include "common.h"
 #include "buildBlocks.h"
 #include "logger.h"
@@ -7,30 +7,22 @@ int main(int argc, char* argv[]) {
     try {
         Logger::getInstance().setLogLevel(LogLevel::INFO);
         json program = parseJsonFromStdin();
-        LOG_DEBUG("Starting local value numbering");
+        LOG_DEBUG("Starting dead code elimination");
         for (auto& func : program["functions"]) {
             std::vector<std::vector<json>> blocks = buildBlocks(func["instrs"]);
-            LOG_DEBUG("Before local value numbering");
-            //printBlocks(blocks, true);
             std::vector<std::string> args(argv + 1, argv + argc);
-            LVNConfig* config = static_cast<LVNConfig*>(createPassConfig("LVN"));
+            DCEConfig* config = static_cast<DCEConfig*>(createPassConfig("DCE"));
             for (auto& arg : args) {
                 if (arg == "-g") {
                     Logger::getInstance().setLogLevel(LogLevel::DEBUG);
                 }
-                if (arg == "-c") {
-                    config->enableCommutative = true;
-                }
-                else if (arg == "-f") {
-                    config->enableConstantFolding = true;
-                }
-                else if (arg == "-a") {
-                    config->enableAlgebraicIdentity = true;
+                if (arg == "-a") {
+                    config->enableAggressiveDCE = true;
                 }
             }
-            localValueNumbering(blocks, *config);
+            deadCodeElimination(blocks, *config);
             delete config;
-            LOG_DEBUG("After local value numbering");
+            LOG_DEBUG("After dead code elimination");
             //printBlocks(blocks, false);
             func["instrs"] = flattenBlocks(blocks);
         }

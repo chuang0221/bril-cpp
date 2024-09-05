@@ -48,11 +48,11 @@ public:
     int refreshNumber(const std::string& name);
     long long stov(const std::string& value);
     long long evaluate(const std::string& type1, const std::string& value1, const std::string& type2, const std::string& value2, const std::string& op);
-    void update(json& instr, const Config& config);
+    void update(json& instr, const LVNConfig& config);
 };
 
 void checkCommutative(std::tuple<int, std::string, int>& nameTuple);
 IdentityType checkAlgebraicIdentity(std::tuple<int, std::string, int>& nameTuple);
 
-void localValueNumbering(std::vector<std::vector<json>>& blocks, const Config& config);
+void localValueNumbering(std::vector<std::vector<json>>& blocks, const LVNConfig& config);
 #endif

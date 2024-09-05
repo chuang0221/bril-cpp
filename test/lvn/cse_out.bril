@@ -1,0 +1,6 @@
+@main {
+  t1: int = mul a two;
+  t2: int = mul t1 b;
+  result: int = add t1 t2;
+  print result;
+}
