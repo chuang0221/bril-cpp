@@ -14,5 +14,5 @@ using json = nlohmann::json;
 
 void deadCodeElimination(std::vector<std::vector<json>>& blocks, DCEConfig& config);
 void deadCodeEliminationGlobal(std::vector<std::vector<json>>& blocks);
-void deadCodeEliminationLocal(std::vector<std::vector<json>>& blocks);
+void deadCodeEliminationLocal(std::vector<json>& block);
 #endif
