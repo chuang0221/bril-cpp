@@ -1,7 +1,8 @@
 #include "deadCodeElimination.h"
 #include "logger.h"
 
-void deadCodeElimination(std::vector<std::vector<json>>& blocks, DCEConfig& config) {
+void deadCodeEliminationGlobal(std::vector<std::vector<json>>& blocks) {
+    // Delete the unused variables globally
     std::unordered_set<std::string> usedVars;
     // 1. Traverse the blocks to get all used variables
     for (auto &block : blocks) {
@@ -27,8 +28,22 @@ void deadCodeElimination(std::vector<std::vector<json>>& blocks, DCEConfig& conf
         block = newBlock;
     }
     if (changed) {
-        deadCodeElimination(blocks, config);
+        deadCodeEliminationGlobal(blocks);
     }
     LOG_DEBUG("\n");
+    return;
+}
+
+void deadCodeEliminationLocal(std::vector<std::vector<json>>& blocks) {
+    return;
+}
+
+void deadCodeElimination(std::vector<std::vector<json>>& blocks, DCEConfig& config) {
+    if (config.enableGlobalDCE) {
+        deadCodeEliminationGlobal(blocks);
+    }
+    if (config.enableLocalDCE) {
+        deadCodeEliminationLocal(blocks);
+    }
     return;
 }

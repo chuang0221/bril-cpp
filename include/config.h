@@ -20,9 +20,9 @@ public:
 
 class DCEConfig : public PassConfig {
 public:
-    bool enableAggressiveDCE;
-
-    DCEConfig(bool enableAggressiveDCE) : enableAggressiveDCE(enableAggressiveDCE) {}
+    bool enableGlobalDCE;
+    bool enableLocalDCE;
+    DCEConfig(bool enableGlobalDCE, bool enableLocalDCE) : enableGlobalDCE(enableGlobalDCE), enableLocalDCE(enableLocalDCE) {}
 };
 
 PassConfig* createPassConfig(const std::string& passName);

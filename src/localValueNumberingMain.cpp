@@ -11,7 +11,6 @@ int main(int argc, char* argv[]) {
         for (auto& func : program["functions"]) {
             std::vector<std::vector<json>> blocks = buildBlocks(func["instrs"]);
             LOG_DEBUG("Before local value numbering");
-            //printBlocks(blocks, true);
             std::vector<std::string> args(argv + 1, argv + argc);
             LVNConfig* config = static_cast<LVNConfig*>(createPassConfig("LVN"));
             for (auto& arg : args) {
@@ -31,7 +30,6 @@ int main(int argc, char* argv[]) {
             localValueNumbering(blocks, *config);
             delete config;
             LOG_DEBUG("After local value numbering");
-            //printBlocks(blocks, false);
             func["instrs"] = flattenBlocks(blocks);
         }
         std::cout << program.dump(2) << std::endl;

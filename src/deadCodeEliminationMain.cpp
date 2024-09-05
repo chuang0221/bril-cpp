@@ -12,18 +12,21 @@ int main(int argc, char* argv[]) {
             std::vector<std::vector<json>> blocks = buildBlocks(func["instrs"]);
             std::vector<std::string> args(argv + 1, argv + argc);
             DCEConfig* config = static_cast<DCEConfig*>(createPassConfig("DCE"));
+            config->enableGlobalDCE = true;
             for (auto& arg : args) {
                 if (arg == "-g") {
                     Logger::getInstance().setLogLevel(LogLevel::DEBUG);
                 }
-                if (arg == "-a") {
-                    config->enableAggressiveDCE = true;
+                if (arg == "-global") {
+                    config->enableGlobalDCE = true;
+                }
+                if (arg == "-local") {
+                    config->enableLocalDCE = true;
                 }
             }
             deadCodeElimination(blocks, *config);
             delete config;
             LOG_DEBUG("After dead code elimination");
-            //printBlocks(blocks, false);
             func["instrs"] = flattenBlocks(blocks);
         }
         std::cout << program.dump(2) << std::endl;

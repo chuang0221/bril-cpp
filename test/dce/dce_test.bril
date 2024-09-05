@@ -3,10 +3,10 @@
     num2: int = const 2;
     should_be_removed1: int = const 3;
     should_be_removed2: int = const 4;
-    should_not_be_removed: int = const 5;
+    should_be_removed3: int = const 5;
 
     num3: int = add num1 num2;
     num4: int = add num3 num3;
-    num5: int = and num4 should_not_be_removed;
+    num5: int = and num4 should_be_removed3;
     print num4;
 }
