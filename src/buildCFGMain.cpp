@@ -14,7 +14,7 @@ int main() {
         LOG_INFO("Starting CFG building process");
         
         for (const auto& func : program["functions"]) {
-            std::cout << "digraph: " << func["name"] << " {" << std::endl;
+            std::cout << "digraph: " << func["name"] << " {" << '\n';
             const auto blocks = buildBlocks(func["instrs"]);
             auto table = buildTable(blocks);
             insertTerminators(table);
@@ -27,7 +27,7 @@ int main() {
                 const json succs = successors(block.back());
                 for (const auto& succ : succs) {
                     std::string succ_str = succ.get<std::string>();
-                    std::cout << "  " << name << "->" << succ_str << std::endl;
+                    std::cout << "  " << name << "->" << succ_str << '\n';
                 }
             }
             std::cout << "}" << std::endl;

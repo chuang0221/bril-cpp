@@ -12,7 +12,7 @@ void Logger::setLogLevel(LogLevel level) {
 
 void Logger::log(LogLevel level, const std::string& message) {
     if (level >= currentLevel) {
-        std::cout << getTimestamp() << " [" << getLevelString(level) << "] " << message << std::endl;
+        std::cout << getTimestamp() << " [" << getLevelString(level) << "] " << message << '\n';
     }
 }
 
@@ -20,7 +20,7 @@ template<typename T>
 void Logger::logJson(LogLevel level, const std::string& message, const T& json) {
     if (level >= currentLevel) {
         std::cout << getTimestamp() << " [" << getLevelString(level) << "] " << message << " ";
-        std::cout << json.dump(2) << std::endl;
+        std::cout << json.dump(2) << '\n';
     }
 }
 

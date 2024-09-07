@@ -54,14 +54,14 @@ void printBlock(std::vector<json> block, bool withLabel) {
     for (int i = 0; i < block.size(); i++) {
         if (withLabel) {
             if (i == 0 && block[i].contains("label")) {
-                std::cout << "block " << block[i]["label"] << ":" << std::endl;
+                std::cout << "block " << block[i]["label"] << ":" << '\n';
                 continue;
             }
             else if (i == 0){
-                std::cout << "anonymous block:" << std::endl;
+                std::cout << "anonymous block:" << '\n';
             }
         }
-        std::cout << "  " << instr2str(block[i]) << std::endl;
+        std::cout << "  " << instr2str(block[i]) << '\n';
     }
 }
 

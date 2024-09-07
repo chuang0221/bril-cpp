@@ -32,7 +32,7 @@ int main(int argc, char* argv[]) {
             LOG_DEBUG("After local value numbering");
             func["instrs"] = flattenBlocks(blocks);
         }
-        std::cout << program.dump(2) << std::endl;
+        std::cout << program.dump(2) << '\n';
         LOG_DEBUG("Local value numbering finished");
     } catch (const std::exception& e) {
         LOG_ERROR(std::string("Error: ") + e.what());

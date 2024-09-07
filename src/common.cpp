@@ -6,7 +6,7 @@ json parseJsonFromStdin() {
         std::cin >> program;
     }
     catch (json::parse_error& e) {
-        std::cerr << "Error parsing JSON: " << e.what() << std::endl;
+        std::cerr << "Error parsing JSON: " << e.what() << '\n';
         throw;
     }
     return program;

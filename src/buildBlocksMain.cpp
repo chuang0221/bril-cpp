@@ -15,7 +15,7 @@ int main() {
         LOG_INFO("Blocks building process completed");
     }
     catch (const std::exception& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+        std::cerr << "Error: " << e.what() << '\n';
         return 1;
     }
     return 0;
