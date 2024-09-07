@@ -1,0 +1,30 @@
+extract = 'total_dyn_inst: (\d+)'
+benchmarks = '../bril/benchmarks/core/*.bril'
+
+[runs.baseline]
+pipeline = [
+    "bril2json",
+    "brili -p {args}",
+]
+
+[runs.dce_global]
+pipeline = [
+    "bril2json",
+    "../build/dead_code_elimination -global",
+    "brili -p {args}",
+]
+
+[runs.dce_all]
+pipeline = [
+    "bril2json",
+    "../build/dead_code_elimination -local",
+    "brili -p {args}",
+]
+
+[runs.dce_with_lvn]
+pipeline = [
+    "bril2json",
+    "../build/local_value_numbering -c -f -a",
+    "../build/dead_code_elimination -local",
+    "brili -p {args}",
+]

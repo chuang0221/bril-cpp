@@ -90,6 +90,9 @@ void ValueNumbering::update(json& instr, const LVNConfig& config) {
                 {"type", instr["type"]},
                 {"value", result}
             });
+            if (instr["type"] == "bool") {
+                instr["value"] = result ? true: false;
+            }
             name2const[dest] = {instr["type"], std::to_string(instr["value"].get<long long>())};
             return;
         }
@@ -114,7 +117,7 @@ void ValueNumbering::update(json& instr, const LVNConfig& config) {
             instr["op"] = "const";
             instr["dest"] = dest;
             instr["type"] = instr["type"];
-            instr["value"] = 1;
+            instr["value"] = true;
             name2const[dest] = {instr["type"], std::to_string(instr["value"].get<long long>())};
             return;
         }
