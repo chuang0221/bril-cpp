@@ -19,6 +19,7 @@ set(COMMON_SOURCES
 set(PREPROCESS_SOURCES
     src/preprocess/buildBlocks.cpp
     src/preprocess/buildCFG.cpp
+    src/preprocess/buildDataFlowInfo.cpp
 )
 
 # Optimization library
@@ -41,6 +42,9 @@ target_link_libraries(build_blocks PRIVATE bril_common bril_preprocess nlohmann_
 
 add_executable(build_cfg src/driver/buildCFGMain.cpp)
 target_link_libraries(build_cfg PRIVATE bril_common bril_preprocess nlohmann_json::nlohmann_json)
+
+add_executable(build_dataflow_info src/driver/buildDataFlowInfoMain.cpp)
+target_link_libraries(build_dataflow_info PRIVATE bril_common bril_preprocess nlohmann_json::nlohmann_json)
 
 add_executable(local_value_numbering src/driver/localValueNumberingMain.cpp)
 target_link_libraries(local_value_numbering PRIVATE bril_common bril_preprocess bril_optimization nlohmann_json::nlohmann_json)

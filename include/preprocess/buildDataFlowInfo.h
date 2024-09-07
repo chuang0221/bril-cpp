@@ -6,17 +6,41 @@
 #include "common/instr2str.h"
 #include "preprocess/buildBlocks.h"
 #include "preprocess/buildCFG.h"
+#include <algorithm>
+#include <set>
 
 class DataFlowInfo {
 private:
     int numBlocks;
-    std::map<std::string, std::unordered_set<std::string>> varkill; // the variables that are defined in the block
-    std::map<std::string, std::unordered_set<std::string>> uevar; // the variables that are used in the block but not redefined in the block yet
-    std::map<std::string, std::unordered_set<std::string>> liveout; // the variables that are live at the end of the block
+    std::map<std::string, std::set<std::string>> varkill; // the variables that are defined in the block
+    std::map<std::string, std::set<std::string>> uevar; // the variables that are used in the block but not redefined in the block yet
+    std::map<std::string, std::set<std::string>> liveout; // the variables that are live at the end of the block
 public:
     DataFlowInfo(int numBlocks, std::map<std::string, std::vector<json>>& table);
     void buildVarkillAndUeVar(std::map<std::string, std::vector<json>>& table);
     void buildLiveOut(std::map<std::string, std::vector<json>>& table);
+    void printDataFlowInfo(std::map<std::string, std::vector<json>>& table);
 };
+
+template<typename T>
+std::set<T> setUnion(const std::set<T>& set1, const std::set<T>& set2) {
+    std::vector<T> result;
+    std::set_union(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(result));
+    return std::set<T>(result.begin(), result.end());
+}
+
+template<typename T>
+std::set<T> setIntersection(const std::set<T>& set1, const std::set<T>& set2) {
+    std::vector<T> result;
+    std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(result));
+    return std::set<T>(result.begin(), result.end());
+}
+
+template<typename T>
+std::set<T> setDifference(const std::set<T>& set1, const std::set<T>& set2) {
+    std::vector<T> result;
+    std::set_difference(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(result));
+    return std::set<T>(result.begin(), result.end());
+}
 
 #endif
