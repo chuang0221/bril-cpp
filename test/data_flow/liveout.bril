@@ -1,0 +1,23 @@
+# The example from Figure 8.15 in the book "Engineering a Compiler"
+@main {
+.b0:
+    i: int = const 1;
+    jmp .b1;
+.b1:
+    print i;
+    zero: int = const 0;
+    cond: bool = i ge zero;
+    br cond .b2 .b3;
+.b2:
+    s: int = const 2;
+    jmp .b3;
+.b3:
+    one: int = const 1;
+    s: int = add s one;
+    i: int = add i one;
+    print i;
+    cond2: bool = i ge zero;
+    br cond2 .b4 .b1;
+.b4:
+    print s;
+}
