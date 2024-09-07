@@ -1,7 +1,7 @@
 #ifndef LOCAL_VALUE_NUMBERING_H
 #define LOCAL_VALUE_NUMBERING_H
 
-#include "../common/config.h"
+#include "common/config.h"
 #include <nlohmann/json.hpp>
 #include <unordered_set>
 #include <unordered_map>

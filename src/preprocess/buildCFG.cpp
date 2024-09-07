@@ -3,6 +3,8 @@
 #include "preprocess/buildCFG.h"
 
 std::map<std::string, std::vector<json>> buildTable(const std::vector<std::vector<json>>& blocks) {
+    // Here we assume that the labels are unique
+    // TODO: handle the case where the labels are not unique
     static int id = 0;
     std::map<std::string, std::vector<json>> table;
     for (const auto &block: blocks) {
