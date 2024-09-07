@@ -1,5 +1,5 @@
-#include "localValueNumbering.h"
-#include "logger.h"
+#include "optimization/localValueNumbering.h"
+#include "common/logger.h"
 
 ValueNumbering::ValueNumbering() : _number(0) {}
 

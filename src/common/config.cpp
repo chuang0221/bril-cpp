@@ -1,4 +1,4 @@
-#include "config.h"
+#include "common/config.h"
 
 PassConfig* createPassConfig(const std::string& passName) {
     if (passName == "LVN") {

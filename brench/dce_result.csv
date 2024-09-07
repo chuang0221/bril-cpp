@@ -66,7 +66,7 @@ pythagorean_triple,dce_with_lvn,61518
 primes-between,baseline,574100
 primes-between,dce_global,574100
 primes-between,dce_all,574100
-primes-between,dce_with_lvn,incorrect
+primes-between,dce_with_lvn,571439
 lcm,baseline,2326
 lcm,dce_global,2326
 lcm,dce_all,2326

@@ -1,4 +1,4 @@
-#include "instr2str.h"
+#include "common/instr2str.h"
 
 using json = nlohmann::json;
 

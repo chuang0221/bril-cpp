@@ -1,7 +1,7 @@
 #ifndef DEAD_CODE_ELIMINATION_H
 #define DEAD_CODE_ELIMINATION_H
 
-#include "config.h"
+#include "../common/config.h"
 #include <nlohmann/json.hpp>
 #include <unordered_set>
 #include <unordered_map>

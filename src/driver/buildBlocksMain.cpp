@@ -1,6 +1,6 @@
-#include "buildBlocks.h"
-#include "common.h"
-#include "logger.h"
+#include "preprocess/buildBlocks.h"
+#include "common/common.h"
+#include "common/logger.h"
 
 int main() {
     try {

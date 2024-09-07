@@ -1,8 +1,8 @@
-#include "instr2str.h"
-#include "buildBlocks.h"
-#include "buildCFG.h"
-#include "common.h"
-#include "logger.h"
+#include "preprocess/buildBlocks.h"
+#include "preprocess/buildCFG.h"
+#include "common/common.h"
+#include "common/logger.h"
+#include "common/instr2str.h"
 #include <iostream>
 #include <stdexcept>
 
@@ -30,7 +30,7 @@ int main() {
                     std::cout << "  " << name << "->" << succ_str << '\n';
                 }
             }
-            std::cout << "}" << std::endl;
+            std::cout << "}" << '\n';
         }
         
         LOG_INFO("CFG building process completed");

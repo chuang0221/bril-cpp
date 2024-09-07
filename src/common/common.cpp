@@ -1,4 +1,4 @@
-#include "common.h"
+#include "common/common.h"
 
 json parseJsonFromStdin() {
     json program;

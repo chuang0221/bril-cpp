@@ -1,7 +1,7 @@
-#include "localValueNumbering.h"
-#include "common.h"
-#include "buildBlocks.h"
-#include "logger.h"
+#include "optimization/localValueNumbering.h"
+#include "common/common.h"
+#include "preprocess/buildBlocks.h"
+#include "common/logger.h"
 
 int main(int argc, char* argv[]) {
     try {

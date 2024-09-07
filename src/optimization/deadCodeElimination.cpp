@@ -1,5 +1,5 @@
-#include "deadCodeElimination.h"
-#include "logger.h"
+#include "optimization/deadCodeElimination.h"
+#include "common/logger.h"
 
 void deadCodeEliminationGlobal(std::vector<std::vector<json>>& blocks) {
     // Delete the unused variables globally

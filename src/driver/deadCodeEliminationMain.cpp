@@ -1,7 +1,7 @@
-#include "deadCodeElimination.h"
-#include "common.h"
-#include "buildBlocks.h"
-#include "logger.h"
+#include "optimization/deadCodeElimination.h"
+#include "common/common.h"
+#include "preprocess/buildBlocks.h"
+#include "common/logger.h"
 
 int main(int argc, char* argv[]) {
     try {
@@ -29,7 +29,7 @@ int main(int argc, char* argv[]) {
             LOG_DEBUG("After dead code elimination");
             func["instrs"] = flattenBlocks(blocks);
         }
-        std::cout << program.dump(2) << std::endl;
+        std::cout << program.dump(2) << '\n';
         LOG_DEBUG("Local value numbering finished");
     } catch (const std::exception& e) {
         LOG_ERROR(std::string("Error: ") + e.what());

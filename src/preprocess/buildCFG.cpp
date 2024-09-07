@@ -1,6 +1,6 @@
-#include "instr2str.h"
-#include "buildBlocks.h"
-#include "buildCFG.h"
+#include "common/instr2str.h"
+#include "preprocess/buildBlocks.h"
+#include "preprocess/buildCFG.h"
 
 std::map<std::string, std::vector<json>> buildTable(const std::vector<std::vector<json>>& blocks) {
     static int id = 0;
