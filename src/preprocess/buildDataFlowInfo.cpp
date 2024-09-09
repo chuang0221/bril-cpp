@@ -4,6 +4,7 @@ DataFlowInfo::DataFlowInfo(int numBlocks, const std::unordered_map<std::string, 
     : numBlocks(numBlocks), insertOrder(insertOrder) {
     buildVarkillAndUeVar(table);
     buildLiveOut(table);
+    buildDom(table);
 }
 
 void DataFlowInfo::buildVarkillAndUeVar(const std::unordered_map<std::string, std::vector<json>>& table) {
@@ -46,6 +47,37 @@ void DataFlowInfo::buildLiveOut(const std::unordered_map<std::string, std::vecto
     }
 }
 
+void DataFlowInfo::buildDom(const std::unordered_map<std::string, std::vector<json>>& table) {
+    dom[insertOrder[0]].insert(insertOrder[0]);
+    std::set<std::string> all;
+    for (const auto& name : insertOrder) {
+        all.insert(name);
+    }
+    for (int i = 1; i < numBlocks; i++) {
+        dom[insertOrder[i]] = all;
+    }
+
+    bool changed = true;
+    while (changed) {
+        changed = false;
+
+        for (int i = 1; i < numBlocks; i++) {
+            const auto& preds = predecessors(insertOrder[i], table, insertOrder);
+            std::set<std::string> dom_new;
+            dom_new.insert(insertOrder[i]);
+            std::set<std::string> dom_intersection = all;
+            for (const auto& pred: preds) {
+                dom_intersection = setIntersection(dom_intersection, dom[pred]);
+            }
+            dom_new = setUnion(dom_new, dom_intersection);
+            if (dom_new != dom[insertOrder[i]]) {
+                dom[insertOrder[i]] = dom_new;
+                changed = true;
+            }
+        }
+    }
+}
+
 void DataFlowInfo::printDataFlowInfo(const std::unordered_map<std::string, std::vector<json>>& table) {
     for (const auto& name : insertOrder) {
         LOG_DEBUG("Block: " + name);
@@ -72,6 +104,14 @@ void DataFlowInfo::printDataFlowInfo(const std::unordered_map<std::string, std::
         LOG_DEBUG("Block: " + name);
         for (const auto& var : set) {
             LOG_DEBUG("Variable: " + var);
+        }
+    }
+    LOG_DEBUG("============================================");
+    LOG_DEBUG("Dom: " + std::to_string(dom.size()));
+    for (const auto& [name, set] : dom) {
+        LOG_DEBUG("Block: " + name);
+        for (const auto& var : set) {
+            LOG_DEBUG("Dom: " + var);
         }
     }
     LOG_DEBUG("============================================");

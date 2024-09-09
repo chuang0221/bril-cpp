@@ -1,0 +1,23 @@
+@main {
+.b0:
+    jmp .b1;
+.b1:
+    cond1: bool = const true;
+    br cond1 .b2 .b5;
+.b2:
+    jmp .b3;
+.b3:
+    cond2: bool = const true;
+    br cond2 .b4 .b1;
+.b4:
+    ret;
+.b5:
+    cond3: bool = const true;
+    br cond3 .b6 .b8;
+.b6:
+    jmp .b7;
+.b7:
+    jmp .b3;
+.b8:
+    jmp .b7;
+}

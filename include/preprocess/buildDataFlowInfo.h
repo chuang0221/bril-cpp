@@ -16,10 +16,12 @@ private:
     std::unordered_map<std::string, std::set<std::string>> varkill;
     std::unordered_map<std::string, std::set<std::string>> uevar;
     std::unordered_map<std::string, std::set<std::string>> liveout;
+    std::unordered_map<std::string, std::set<std::string>> dom;
 public:
     DataFlowInfo(int numBlocks, const std::unordered_map<std::string, std::vector<json>>& table, const std::vector<std::string>& insertOrder);
     void buildVarkillAndUeVar(const std::unordered_map<std::string, std::vector<json>>& table);
     void buildLiveOut(const std::unordered_map<std::string, std::vector<json>>& table);
+    void buildDom(const std::unordered_map<std::string, std::vector<json>>& table);
     void printDataFlowInfo(const std::unordered_map<std::string, std::vector<json>>& table);
 };
 
