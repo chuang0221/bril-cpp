@@ -11,39 +11,28 @@
 
 class DataFlowInfo {
 private:
-    int numBlocks;
-    std::vector<std::string> insertOrder;
+    const CFG& cfg;
     std::unordered_map<std::string, std::set<std::string>> varkill;
     std::unordered_map<std::string, std::set<std::string>> uevar;
     std::unordered_map<std::string, std::set<std::string>> liveout;
     std::unordered_map<std::string, std::set<std::string>> dom;
+
 public:
-    DataFlowInfo(int numBlocks, const std::unordered_map<std::string, std::vector<json>>& table, const std::vector<std::string>& insertOrder);
-    void buildVarkillAndUeVar(const std::unordered_map<std::string, std::vector<json>>& table);
-    void buildLiveOut(const std::unordered_map<std::string, std::vector<json>>& table);
-    void buildDom(const std::unordered_map<std::string, std::vector<json>>& table);
-    void printDataFlowInfo(const std::unordered_map<std::string, std::vector<json>>& table);
+    DataFlowInfo(const CFG& cfg);
+    void buildVarkillAndUeVar();
+    void buildLiveOut();
+    void buildDom();
+    void printDataFlowInfo() const;
+
+private:
+    template<typename T>
+    static std::set<T> setUnion(const std::set<T>& set1, const std::set<T>& set2);
+
+    template<typename T>
+    static std::set<T> setIntersection(const std::set<T>& set1, const std::set<T>& set2);
+
+    template<typename T>
+    static std::set<T> setDifference(const std::set<T>& set1, const std::set<T>& set2);
 };
-
-template<typename T>
-std::set<T> setUnion(const std::set<T>& set1, const std::set<T>& set2) {
-    std::vector<T> result;
-    std::set_union(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(result));
-    return std::set<T>(result.begin(), result.end());
-}
-
-template<typename T>
-std::set<T> setIntersection(const std::set<T>& set1, const std::set<T>& set2) {
-    std::vector<T> result;
-    std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(result));
-    return std::set<T>(result.begin(), result.end());
-}
-
-template<typename T>
-std::set<T> setDifference(const std::set<T>& set1, const std::set<T>& set2) {
-    std::vector<T> result;
-    std::set_difference(set1.begin(), set1.end(), set2.begin(), set2.end(), std::back_inserter(result));
-    return std::set<T>(result.begin(), result.end());
-}
 
 #endif

@@ -63,6 +63,7 @@
         "ranges": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "__locale": "cpp"
     }
 }

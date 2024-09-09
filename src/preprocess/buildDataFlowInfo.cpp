@@ -1,14 +1,14 @@
 #include "preprocess/buildDataFlowInfo.h"
 
-DataFlowInfo::DataFlowInfo(int numBlocks, const std::unordered_map<std::string, std::vector<json>>& table, const std::vector<std::string>& insertOrder) 
-    : numBlocks(numBlocks), insertOrder(insertOrder) {
-    buildVarkillAndUeVar(table);
-    buildLiveOut(table);
-    buildDom(table);
+DataFlowInfo::DataFlowInfo(const CFG& cfg) : cfg(cfg) {
+    buildVarkillAndUeVar();
+    buildLiveOut();
+    buildDom();
 }
 
-void DataFlowInfo::buildVarkillAndUeVar(const std::unordered_map<std::string, std::vector<json>>& table) {
-    for (const auto& name : insertOrder) {
+void DataFlowInfo::buildVarkillAndUeVar() {
+    const auto& table = cfg.getTable();
+    for (const auto& name : cfg.getInsertOrder()) {
         const auto& block = table.at(name);
         for (const auto& instr : block) {
             if (instr.find("args") != instr.end() && instr["args"].size() > 0) {
@@ -27,17 +27,20 @@ void DataFlowInfo::buildVarkillAndUeVar(const std::unordered_map<std::string, st
     }
 }
 
-void DataFlowInfo::buildLiveOut(const std::unordered_map<std::string, std::vector<json>>& table) {
+void DataFlowInfo::buildLiveOut() {
+    const auto& table = cfg.getTable();
+    const auto& successors = cfg.getSuccessors();
     bool changed = true;
     while (changed) {
         changed = false;
-        for (const auto& name : insertOrder) {
-            const auto& block = table.at(name);
+        for (const auto& name : cfg.getInsertOrder()) {
+            if (successors.find(name) == successors.end()) {
+                continue;
+            }
             std::set<std::string> liveout_new;
-            const json succs = successors(block.back());
+            const auto& succs = successors.at(name);
             for (const auto& succ : succs) {
-                std::string succ_str = succ.get<std::string>();
-                liveout_new = setUnion(liveout_new, setUnion(uevar[succ_str], setDifference(liveout[succ_str], setIntersection(liveout[succ_str], varkill[succ_str]))));
+                liveout_new = setUnion(liveout_new, setUnion(uevar[succ], setDifference(liveout[succ], setIntersection(liveout[succ], varkill[succ]))));
             }
             if (liveout_new != liveout[name]) {
                 liveout[name] = liveout_new;
@@ -47,22 +50,23 @@ void DataFlowInfo::buildLiveOut(const std::unordered_map<std::string, std::vecto
     }
 }
 
-void DataFlowInfo::buildDom(const std::unordered_map<std::string, std::vector<json>>& table) {
+void DataFlowInfo::buildDom() {
+    const auto& insertOrder = cfg.getInsertOrder();
+    const auto& predecessors = cfg.getPredecessors();
     dom[insertOrder[0]].insert(insertOrder[0]);
-    std::set<std::string> all;
-    for (const auto& name : insertOrder) {
-        all.insert(name);
-    }
-    for (int i = 1; i < numBlocks; i++) {
+    std::set<std::string> all(insertOrder.begin(), insertOrder.end());
+    for (size_t i = 1; i < insertOrder.size(); i++) {
         dom[insertOrder[i]] = all;
     }
 
     bool changed = true;
     while (changed) {
         changed = false;
-
-        for (int i = 1; i < numBlocks; i++) {
-            const auto& preds = predecessors(insertOrder[i], table, insertOrder);
+        for (size_t i = 1; i < insertOrder.size(); i++) {
+            if (predecessors.find(insertOrder[i]) == predecessors.end()) {
+                continue;
+            }
+            const auto& preds = predecessors.at(insertOrder[i]);
             std::set<std::string> dom_new;
             dom_new.insert(insertOrder[i]);
             std::set<std::string> dom_intersection = all;
@@ -78,8 +82,31 @@ void DataFlowInfo::buildDom(const std::unordered_map<std::string, std::vector<js
     }
 }
 
-void DataFlowInfo::printDataFlowInfo(const std::unordered_map<std::string, std::vector<json>>& table) {
-    for (const auto& name : insertOrder) {
+template<typename T>
+std::set<T> DataFlowInfo::setUnion(const std::set<T>& set1, const std::set<T>& set2) {
+    std::set<T> result = set1;
+    result.insert(set2.begin(), set2.end());
+    return result;
+}
+
+template<typename T>
+std::set<T> DataFlowInfo::setIntersection(const std::set<T>& set1, const std::set<T>& set2) {
+    std::set<T> result;
+    std::set_intersection(set1.begin(), set1.end(), set2.begin(), set2.end(), 
+                          std::inserter(result, result.begin()));
+    return result;
+}
+
+template<typename T>
+std::set<T> DataFlowInfo::setDifference(const std::set<T>& set1, const std::set<T>& set2) {
+    std::set<T> result;
+    std::set_difference(set1.begin(), set1.end(), set2.begin(), set2.end(), 
+                        std::inserter(result, result.begin()));
+    return result;
+}
+
+void DataFlowInfo::printDataFlowInfo() const {
+    for (const auto& name : cfg.getInsertOrder()) {
         LOG_DEBUG("Block: " + name);
     }
     LOG_DEBUG("============================================");

@@ -6,9 +6,6 @@
 #include <iostream>
 #include <stdexcept>
 
-#include <unordered_map>
-#include <vector>
-
 int main() {
     try {
         Logger::getInstance().setLogLevel(LogLevel::INFO);
@@ -19,28 +16,34 @@ int main() {
         for (const auto& func : program["functions"]) {
             std::cout << "digraph: " << func["name"] << " {" << '\n';
             const auto blocks = buildBlocks(func["instrs"]);
-            auto [table, insertOrder] = buildTable(blocks);
-            insertTerminators(table, insertOrder);
+            CFG cfg(blocks);
 
-            for (const auto& name : insertOrder) {
+            for (const auto& name : cfg.getInsertOrder()) {
                 std::cout << "  " << name << '\n';
             }
 
-            for (const auto& name : insertOrder) {
-                const json succs = successors(table[name].back());
+            for (const auto& [name, succs] : cfg.getSuccessors()) {
                 for (const auto& succ : succs) {
-                    std::string succ_str = succ.get<std::string>();
-                    std::cout << "  " << name << "->" << succ_str << '\n';
+                    std::cout << "  " << name << "->" << succ << '\n';
                 }
             }
             std::cout << "}" << '\n';
 
             LOG_INFO("Predecessors: ");
-            for (const auto& name : insertOrder) {
-                const json preds = predecessors(name, table, insertOrder);
-                std::cout << "  " << name << ": " << preds << '\n';
+            const auto& predecessors = cfg.getPredecessors();
+            for (const auto& name : cfg.getInsertOrder()) {
+                std::cout << "  " << name << ": ";
+                if (predecessors.find(name) != predecessors.end()) {
+                    const auto& preds = predecessors.at(name);
+                    for (const auto& pred : preds) {
+                        std::cout << "  " << pred << " ";
+                    }
+                }
+                else {
+                    std::cout << "[]";
+                }
+                std::cout << '\n';
             }
-            std::cout << '\n';
         }
         
         LOG_INFO("CFG building process completed");

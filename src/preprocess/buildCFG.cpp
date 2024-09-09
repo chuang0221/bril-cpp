@@ -3,14 +3,14 @@
 #include "preprocess/buildCFG.h"
 #include "common/logger.h"
 
-std::pair<std::unordered_map<std::string, std::vector<json>>, std::vector<std::string>> 
-buildTable(const std::vector<std::vector<json>>& blocks) {
-    // Here we assume that the labels are unique
-    // TODO: handle the case where the labels are not unique
-    static int id = 0;
-    std::unordered_map<std::string, std::vector<json>> table;
-    std::vector<std::string> insertOrder;
+CFG::CFG(const std::vector<std::vector<json>>& blocks) {
+    buildTable(blocks);
+    insertTerminators();
+    computeSuccessorsAndPredecessors();
+}
 
+void CFG::buildTable(const std::vector<std::vector<json>>& blocks) {
+    static int id = 0;
     for (const auto &block: blocks) {
         std::string name;
         if (!block.empty() && block[0].find("label") != block[0].end()) {
@@ -23,10 +23,9 @@ buildTable(const std::vector<std::vector<json>>& blocks) {
         }
         insertOrder.push_back(name);
     }
-    return {table, insertOrder};
 }
 
-void insertTerminators(std::unordered_map<std::string, std::vector<json>>& table, const std::vector<std::string>& insertOrder) {
+void CFG::insertTerminators() {
     for (size_t i = 0; i < insertOrder.size(); ++i) {
         auto& name = insertOrder[i];
         auto& block = table[name];
@@ -40,21 +39,36 @@ void insertTerminators(std::unordered_map<std::string, std::vector<json>>& table
     }
 }
 
-json successors(const json& instr) {
-    if (isTerminator(instr)) {
-        return (instr["op"] != "ret") ? instr["labels"] : json::array();
-    }
-    throw std::runtime_error(instr["op"].get<std::string>() + " is not a terminator");
-}
-
-json predecessors(const std::string& label, const std::unordered_map<std::string, std::vector<json>>& table, const std::vector<std::string>& insertOrder) {
-    json preds;
+void CFG::computeSuccessorsAndPredecessors() {
     for (const auto& name : insertOrder) {
-        const auto& block = table.at(name);
-        const json succs = successors(block.back());
-        if (std::find(succs.begin(), succs.end(), label) != succs.end()) {
-            preds.push_back(name);
+        const auto& block = table[name];
+        const json& lastInstr = block.back();
+        
+        if (isTerminator(lastInstr)) {
+            if (lastInstr["op"] != "ret") {
+                for (const auto& succ : lastInstr["labels"]) {
+                    successors[name].insert(succ.get<std::string>());
+                    predecessors[succ.get<std::string>()].insert(name);
+                }
+            }
+        } else {
+            throw std::runtime_error(lastInstr["op"].get<std::string>() + " is not a terminator");
         }
     }
-    return preds;
+}
+
+const std::unordered_map<std::string, std::vector<json>>& CFG::getTable() const {
+    return table;
+}
+
+const std::vector<std::string>& CFG::getInsertOrder() const {
+    return insertOrder;
+}
+
+const std::unordered_map<std::string, std::unordered_set<std::string>>& CFG::getSuccessors() const {
+    return successors;
+}
+
+const std::unordered_map<std::string, std::unordered_set<std::string>>& CFG::getPredecessors() const {
+    return predecessors;
 }

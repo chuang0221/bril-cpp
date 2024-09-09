@@ -13,10 +13,9 @@ int main() {
         LOG_DEBUG("Starting data flow info building process");
         for (const auto& func : program["functions"]) {
             const auto blocks = buildBlocks(func["instrs"]);
-            auto [table, insertOrder] = buildTable(blocks);
-            insertTerminators(table, insertOrder);
-            DataFlowInfo dataFlowInfo(table.size(), table, insertOrder);
-            dataFlowInfo.printDataFlowInfo(table);
+            CFG cfg(blocks);
+            DataFlowInfo dataFlowInfo(cfg);
+            dataFlowInfo.printDataFlowInfo();
         }
         LOG_DEBUG("Finished data flow info building process");
         return 0;
