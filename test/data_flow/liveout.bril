@@ -2,11 +2,12 @@
 @main {
 .b0:
     i: int = const 1;
+    redundant: int = add one two;
     jmp .b1;
 .b1:
     print i;
     zero: int = const 0;
-    cond: bool = i ge zero;
+    cond: bool = ge i zero;
     br cond .b2 .b3;
 .b2:
     s: int = const 2;
@@ -16,7 +17,7 @@
     s: int = add s one;
     i: int = add i one;
     print i;
-    cond2: bool = i ge zero;
+    cond2: bool = ge i zero;
     br cond2 .b4 .b1;
 .b4:
     print s;
