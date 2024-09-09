@@ -12,14 +12,15 @@
 class DataFlowInfo {
 private:
     int numBlocks;
-    std::map<std::string, std::set<std::string>> varkill; // the variables that are defined in the block
-    std::map<std::string, std::set<std::string>> uevar; // the variables that are used in the block but not redefined in the block yet
-    std::map<std::string, std::set<std::string>> liveout; // the variables that are live at the end of the block
+    std::vector<std::string> insertOrder;
+    std::unordered_map<std::string, std::set<std::string>> varkill;
+    std::unordered_map<std::string, std::set<std::string>> uevar;
+    std::unordered_map<std::string, std::set<std::string>> liveout;
 public:
-    DataFlowInfo(int numBlocks, std::map<std::string, std::vector<json>>& table);
-    void buildVarkillAndUeVar(std::map<std::string, std::vector<json>>& table);
-    void buildLiveOut(std::map<std::string, std::vector<json>>& table);
-    void printDataFlowInfo(std::map<std::string, std::vector<json>>& table);
+    DataFlowInfo(int numBlocks, const std::unordered_map<std::string, std::vector<json>>& table, const std::vector<std::string>& insertOrder);
+    void buildVarkillAndUeVar(const std::unordered_map<std::string, std::vector<json>>& table);
+    void buildLiveOut(const std::unordered_map<std::string, std::vector<json>>& table);
+    void printDataFlowInfo(const std::unordered_map<std::string, std::vector<json>>& table);
 };
 
 template<typename T>
